@@ -1,32 +1,28 @@
 <template>
     <div class="container">
-        <child>
-            <template v-slot:main>
-                <div>
-                    导航
-                </div>
-            </template>
-
-            <template #footer="{user:person, testClick}">
-                <div>
-                    {{person.title}}
-                    <button @click="testClick">click me</button>
-                </div>
-            </template>
-        </child>
+        <p>收到：{{reveivedIframeMsg}}</p>
+        <input type="text" id="message-input" v-model="txt" />
+        <button @click.prevent="btnClick">send message</button>
+        <iframe ref="ifr" src="http://localhost:5005/page2" frameborder="1"></iframe>
     </div>
 </template>
 
 <script>
-import Child from "@/components/Child";
+
 
 export default {
     name: "test",
     data: function() {
-        return {};
+        return {
+            txt: "",
+            reveivedIframeMsg: ""
+        };
     },
-    components: {
-        child: Child
+    methods: {
+        btnClick(e) {
+            this.$refs['ifr'].contentWindow.postMessage(this.txt, '*');
+        },
+
     }
 };
 </script>
