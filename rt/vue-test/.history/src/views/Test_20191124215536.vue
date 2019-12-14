@@ -42,7 +42,7 @@ export default {
             if (e && e.target) {
                 console.log("d", e);
 
-                if (e.composed) {
+                if (e.composing) {
                     return;
                 }
                 // ajax

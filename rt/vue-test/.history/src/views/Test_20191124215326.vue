@@ -28,13 +28,14 @@ export default {
             };
         },
         handleCompositionStart(e) {
-            // e.targe.composing = true;
+            e.targe.composing = true;
         },
 
         handleCompositionEnd(e) {
-            // e.targe.composing = false;
+            e.targe.composing = false;
             var event = document.createEvent("HTMLEvents");
             event.initEvent("input");
+            event.targe.composing = false;
             e.target.dispatchEvent(event);
         },
 
@@ -42,7 +43,7 @@ export default {
             if (e && e.target) {
                 console.log("d", e);
 
-                if (e.composed) {
+                if (e.composing) {
                     return;
                 }
                 // ajax

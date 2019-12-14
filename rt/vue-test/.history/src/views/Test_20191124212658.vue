@@ -20,7 +20,7 @@ export default {
     },
     methods: {
         debounce(func, wait = 50) {
-            return (...args) => {
+            return (...arg) => {
                 if (this.timer) clearTimeout(this.timer);
                 this.timer = setTimeout(() => {
                     func.apply(this, args);
@@ -28,26 +28,25 @@ export default {
             };
         },
         handleCompositionStart(e) {
-            // e.targe.composing = true;
+            e.target.composing = true;
         },
 
         handleCompositionEnd(e) {
-            // e.targe.composing = false;
+            e.target.composing = false;
             var event = document.createEvent("HTMLEvents");
             event.initEvent("input");
             e.target.dispatchEvent(event);
         },
 
         handleInput(e) {
-            if (e && e.target) {
-                console.log("d", e);
-
-                if (e.composed) {
+            console.log(e);
+            this.debounce(e => {
+                if (e.target.composing) {
                     return;
                 }
                 // ajax
-                console.log(e.target.value);
-            }
+                console.log(e.target.input);
+            }, 200);
         }
     }
 };

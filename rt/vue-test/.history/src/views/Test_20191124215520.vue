@@ -35,6 +35,7 @@ export default {
             // e.targe.composing = false;
             var event = document.createEvent("HTMLEvents");
             event.initEvent("input");
+            event.targe.composing = false;
             e.target.dispatchEvent(event);
         },
 
@@ -42,7 +43,7 @@ export default {
             if (e && e.target) {
                 console.log("d", e);
 
-                if (e.composed) {
+                if (e.composing) {
                     return;
                 }
                 // ajax

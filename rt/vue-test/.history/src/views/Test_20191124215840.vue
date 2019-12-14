@@ -33,9 +33,9 @@ export default {
 
         handleCompositionEnd(e) {
             // e.targe.composing = false;
-            var event = document.createEvent("HTMLEvents");
-            event.initEvent("input");
-            e.target.dispatchEvent(event);
+            // var event = document.createEvent("HTMLEvents");
+            // event.initEvent("input");
+            // e.target.dispatchEvent(event);
         },
 
         handleInput(e) {

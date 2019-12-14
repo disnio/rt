@@ -2,8 +2,9 @@
     <div class="container">
         <input
             ref="input"
+            v-model="tt"
             @compositionstart="handleCompositionStart"
-            @input="handleInput"
+            @change="handleInput"
             @compositionend="handleCompositionEnd"
         />
     </div>
@@ -14,40 +15,39 @@ export default {
     name: "test",
     data: function() {
         return {
-            tt: "",
-            timer: null
+            tt: ""
         };
     },
     methods: {
         debounce(func, wait = 50) {
-            return (...args) => {
-                if (this.timer) clearTimeout(this.timer);
-                this.timer = setTimeout(() => {
+            let timer = 0;
+            return function(...arg) {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(() => {
                     func.apply(this, args);
                 }, wait);
             };
         },
         handleCompositionStart(e) {
-            // e.targe.composing = true;
+            e.target.composing = true;
         },
 
         handleCompositionEnd(e) {
-            // e.targe.composing = false;
-            var event = document.createEvent("HTMLEvents");
+            e.target.composing = false;
+            var event = document.creatEvent("HTMLEvents");
             event.initEvent("input");
             e.target.dispatchEvent(event);
         },
 
         handleInput(e) {
-            if (e && e.target) {
-                console.log("d", e);
-
-                if (e.composed) {
+            console.log(e);
+            this.debounce(e => {
+                if (e.target.composing) {
                     return;
                 }
                 // ajax
-                console.log(e.target.value);
-            }
+                console.log(e.target.input);
+            }, 500);
         }
     }
 };

@@ -28,26 +28,26 @@ export default {
             };
         },
         handleCompositionStart(e) {
-            // e.targe.composing = true;
+            e.target.composing = true;
         },
 
         handleCompositionEnd(e) {
-            // e.targe.composing = false;
+            e.target.composing = false;
             var event = document.createEvent("HTMLEvents");
             event.initEvent("input");
+            event.target.composing = false;
             e.target.dispatchEvent(event);
         },
 
         handleInput(e) {
-            if (e && e.target) {
-                console.log("d", e);
-
-                if (e.composed) {
+            console.log(e);
+            this.debounce(e => {
+                if (e.composing) {
                     return;
                 }
                 // ajax
-                console.log(e.target.value);
-            }
+                console.log(e.target.input);
+            }, 200)();
         }
     }
 };
