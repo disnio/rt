@@ -1,16 +1,12 @@
-class Foo {
-    foo = 123;
+interface Foo {
+    foo: number;
+    common: string;
 }
-class Bar {
-    bar = 123;
+interface Bar {
+    bar: number;
+    common: string;
 }
-function doStuff(arg: Foo | Bar) {
-    if (arg instanceof Foo) {
-        console.log(arg.foo); // ok
-    } else {
-        // 这个块中，一定是 'Bar'
-        console.log(arg.bar); // ok
-    }
+
+function isFoo(arg: Foo): arg is Foo {
+    return arg.foo !== undefined;
 }
-doStuff(new Foo());
-doStuff(new Bar());
