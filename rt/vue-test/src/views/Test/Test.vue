@@ -7,10 +7,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import Mock from 'mockjs';
-import * as d3 from 'd3';
-
 export default {
     components: {},
     data() {
@@ -21,8 +17,6 @@ export default {
     },
     created() {},
 
-    mounted() {
-      
-    },
+    mounted() {},
 };
 </script>

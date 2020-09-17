@@ -19,16 +19,16 @@
 </template>
 
 <script>
-import { userMixin } from "@/components/user-mixin.js";
+import { userMixin } from '@/components/user-mixin.js';
 
 export default {
-    name: "ks",
-    props: ["author"],
+    name: 'ks',
+    props: ['author'],
     mixins: [userMixin],
     data() {
         return {
             user: {
-                name: "Susy",
+                name: 'Susy',
             },
             clicks: 0,
             // 新变量
@@ -37,26 +37,27 @@ export default {
     },
     computed: {
         nameClass() {
-            return this.clicks % 2 === 0 ? "blue" : "red";
+            return this.clicks % 2 === 0 ? 'blue' : 'red';
         },
     },
     mounted() {
-        console.log("user name:", this.getUserName());
+        console.log('user name:', this.getUserName());
     },
     methods: {
         handleClick() {
             this.clicks++;
-            this.$emit("count", this.clicks);
+            this.$emit('count', this.clicks);
             if (this.author.name !== this.authorName) {
                 this.changeName();
             }
         },
         changeName() {
-            this.$set(this.author, "name", "Emily" + this.clicks);
+            this.$set(this.author, 'name', 'Emily' + this.clicks);
         },
     },
 };
 </script>
+
 <style module>
 .author {
     color: black;

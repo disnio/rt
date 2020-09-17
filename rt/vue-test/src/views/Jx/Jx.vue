@@ -62,10 +62,10 @@ export default {
                     count={this.count}
                     click-child={this.clickChild}
                     scopedSlots={{
-                        title: (props) => {
+                        title: props => {
                             return <h2>{props.title}</h2>;
                         },
-                        content: (props) => {
+                        content: props => {
                             let cont = props.content;
                             // 模板定制
                             switch (item.tpid) {
@@ -75,22 +75,15 @@ export default {
                                             {this.tplP(cont)}
                                         </div>
                                     );
-                                    break;
-
-                                default:
+                                case 2:
                                     return (
                                         <div class="base">
                                             {this.tplB(cont)}
                                         </div>
                                     );
-                                    break;
+                                default:
+                                    return <div>{cont}</div>;
                             }
-                            return (
-                                <div>
-                                    <hr />
-                                    <p>{props.content}</p>
-                                </div>
-                            );
                         },
                     }}
                     class="item"

@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <a-layout style="min-height: 100vh;">
+        <a-layout style="min-height: 100vh">
             <a-layout-sider collapsible v-model="collapsed">
                 <div class="logo" />
                 <a-menu

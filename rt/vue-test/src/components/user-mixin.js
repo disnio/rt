@@ -1,8 +1,7 @@
 export const userMixin = {
     methods: {
-        getUserName(){
+        getUserName() {
             return this.user.name;
-        }
-    }
+        },
+    },
 };
-

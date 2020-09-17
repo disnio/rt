@@ -3,4 +3,10 @@
 /rt/ds/.history
 /rt/jm/node_modules
 /rt/jm/.history
-/rt/vue-test/.history
+/rt/**/**/.history
+/rt/react-test/dist
+/rt/**/.history
+/rt/**/**/.idea
+/rt/react-test/node_modules
+/rt/react-test/yarn-error.log
+/rt/css/vw-px-rem-adapter/postcss-px-viewport/.history

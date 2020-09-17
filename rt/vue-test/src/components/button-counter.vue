@@ -1,23 +1,25 @@
 <script>
 const ButtonCounter = {
-    name: "button-counter",
-    props: ["count"],
+    name: 'button-counter',
+    props: ['count'],
     methods: {
         onClick() {
-            this.$emit("change", this.count + 1);
+            this.$emit('change', this.count + 1);
         },
     },
     render() {
         return (
             <button onClick={this.onClick}>
-                You clicked me {this.count} times.
+                You clicked me
+                {this.count}
+                times.
             </button>
         );
     },
 };
 
 export default {
-    name: "button-counter-container",
+    name: 'button-counter-container',
     data() {
         return {
             count: 0,
@@ -33,13 +35,17 @@ export default {
         return (
             <div>
                 <ButtonCounter
-                    style={{ marginTop: "10px" }}
+                    style={{
+                        marginTop: '10px',
+                    }}
                     count={count}
                     type="button"
                     onChange={onChange}
                 />
                 <ButtonCounter
-                    style={{ marginTop: "10px" }}
+                    style={{
+                        marginTop: '10px',
+                    }}
                     count={count}
                     type="button"
                     domPropsInnerHTML={`hello ${this.count}.`}

@@ -9,7 +9,7 @@
 <script>
 export default {
     name: 'page2',
-    data: function() {
+    data: function () {
         return {
             state: 'loading',
             list: [0, 3, [4, 17], [2, [8, 6], 10]],
@@ -33,13 +33,13 @@ export default {
                 this.state = 'over';
             }, 2000);
         },
-        debounce2: function(func, wait = 50, immediate) {
+        debounce2: function (func, wait = 50, immediate = false) {
             var timer;
             var context;
             var arg;
 
             var late = () =>
-                setTimeout(function() {
+                setTimeout(function () {
                     timer = null;
 
                     if (!immediate) {
@@ -47,7 +47,7 @@ export default {
                     }
                 }, wait);
 
-            return function(...params) {
+            return function (...params) {
                 if (!timer) {
                     if (immediate) {
                         func.apply(this, params);
@@ -62,10 +62,10 @@ export default {
             };
         },
 
-        throttle2: function(func, wait) {
+        throttle2: function (func, wait) {
             var timer = null;
             var previous = null;
-            return function() {
+            return function () {
                 var now = +new Date();
                 if (!previous) previous = now;
                 if (now - previous > wait) {
@@ -74,13 +74,13 @@ export default {
                     clearTimeout(timer);
                 } else {
                     clearTimeout(timer);
-                    timer = setTimeout(function() {
+                    timer = setTimeout(function () {
                         func();
                     }, wait);
                 }
             };
         },
-        curry: function(fn) {
+        curry: function (fn) {
             let len = fn.length;
 
             return function cu(...args) {
@@ -93,7 +93,7 @@ export default {
                 }
             };
         },
-        flattenDeep2: function(arr) {
+        flattenDeep2: function (arr) {
             if (Array.isArray(arr)) {
                 console.log(arr);
                 return arr.reduce((arc, b) => {
@@ -103,7 +103,7 @@ export default {
                 return [arr];
             }
         },
-        myInstanceof: function(obj, typ) {
+        myInstanceof: function (obj, typ) {
             let prototype = typ.prototype;
             obj = obj.__proto__;
             while (true) {
@@ -118,7 +118,7 @@ export default {
                 obj = obj.__proto__;
             }
         },
-        myNew: function(func) {
+        myNew: function (func) {
             var res = {};
             if (func.prototype !== null) {
                 res.prototype = func.prototype;
@@ -137,12 +137,12 @@ export default {
 
             return res;
         },
-        myInherit: function() {
+        myInherit: function () {
             function Parent(name) {
                 this.name = name;
             }
 
-            Parent.prototype.sayName = function() {
+            Parent.prototype.sayName = function () {
                 console.log('parent name:', this.name);
             };
 
@@ -153,12 +153,13 @@ export default {
 
             function create(proto) {
                 function F() {}
+
                 F.prototype = proto;
                 return new F();
             }
 
             Child.prototype = create(Parent.prototype);
-            Child.prototype.sayName = function() {
+            Child.prototype.sayName = function () {
                 console.log('child name:', this.name);
             };
             Child.prototype.constructor = Child;
@@ -169,10 +170,9 @@ export default {
             var child = new Child('son', 'father');
             child.sayName();
         },
-        mySetTimeout: function() {
+        mySetTimeout: function () {
             var executeTimes = 0;
             var intervalTime = 500;
-            var intervalId = null;
             var oriTime = +new Date();
 
             setTimeout(function ti() {
@@ -186,7 +186,6 @@ export default {
                     timeDiff,
                     'ms'
                 );
-                var delayParam = 0;
                 sleep(1000);
                 console.log('timeoutFn ', nowExecuteTimes, 'finish');
 
@@ -237,7 +236,7 @@ export default {
                     return;
                 }
                 const fns = this.events[name];
-                fns.forEach((fn) => fn.call(this, ...args));
+                fns.forEach(fn => fn.call(this, ...args));
                 return this;
             }
 
@@ -263,11 +262,12 @@ export default {
                 return this;
             }
         },
-        myPrototypeInherit: function() {
+        myPrototypeInherit: function () {
             function Parent() {
                 this.name = 'tom';
             }
-            Parent.prototype.getName = function() {
+
+            Parent.prototype.getName = function () {
                 return this.name;
             };
 
@@ -276,14 +276,14 @@ export default {
             }
 
             Child.prototype = new Parent();
-            Child.prototype.getSubName = function() {
+            Child.prototype.getSubName = function () {
                 return this.cname;
             };
 
             var sub = new Child();
             console.log(sub.getName(), sub.getSubName());
         },
-        myConstructorInherit: function() {
+        myConstructorInherit: function () {
             function Parent() {
                 this.colors = ['red', 'yellow'];
             }
@@ -301,13 +301,13 @@ export default {
             console.log(sub.colors);
             console.log(sub2.colors);
         },
-        myComposeInherite: function() {
+        myComposeInherite: function () {
             function Parent(name) {
                 this.name = name;
                 this.colors = ['red', 'black'];
             }
 
-            Parent.prototype.sayName = function() {
+            Parent.prototype.sayName = function () {
                 console.log(this.name);
             };
 
@@ -317,7 +317,7 @@ export default {
             }
 
             Child.prototype = new Parent();
-            Child.prototype.sayAge = function() {
+            Child.prototype.sayAge = function () {
                 console.log(this.age, this.name);
             };
 
@@ -330,4 +330,5 @@ export default {
     },
 };
 </script>
+
 <style></style>

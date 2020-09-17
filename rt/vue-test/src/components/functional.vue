@@ -1,21 +1,25 @@
 <script>
 const Functional = {
-    name: "functional",
+    name: 'functional',
     functional: true,
     render(h, context) {
         return (
-            <div style={{ marginTop: "10px" }}>
+            <div
+                style={{
+                    marginTop: '10px',
+                }}
+            >
                 {JSON.stringify(context.props)}
             </div>
         );
     },
 };
 export default {
-    name: "functional-container",
+    name: 'functional-container',
     render() {
         const functionalProps = {
-            props: { value: "来自props" },
-            attrs: { value1: "来自attrs" },
+            props: { value: '来自props' },
+            attrs: { value1: '来自attrs' },
         };
         return (
             <div>

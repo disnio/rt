@@ -10,13 +10,14 @@
         </hoc>
     </div>
 </template>
+
 <script>
 import { withPromise, withLog, compose } from '../utils/hoc-promise';
 import wrapped from '../components/hoc/wrapped.vue';
 
 // 假装这是一个 axios 请求函数
-const request = (params) => {
-    return new Promise((resolve) => {
+const request = params => {
+    return new Promise(resolve => {
         // setTimeout(() => {
         //     }, 1000);
         resolve(params);

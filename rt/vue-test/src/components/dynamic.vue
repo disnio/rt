@@ -38,10 +38,9 @@ export default {
     render() {
         const { onChange1, onChange2, onChange3 } = this;
         const dynamicProps1 = { props: {}, on: {} };
-        if (true) {
-            dynamicProps1.props.value = 'console 1';
-            dynamicProps1.on.change = onChange1;
-        }
+
+        dynamicProps1.props.value = 'console 1';
+        dynamicProps1.on.change = onChange1;
 
         const dynamicProps2 = { on: { change: onChange2 } };
         return (

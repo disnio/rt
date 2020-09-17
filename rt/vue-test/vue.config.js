@@ -1,33 +1,34 @@
 const path = require('path');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 function resolve(dir) {
-    return path.join(__dirname, './', dir)
+    return path.join(__dirname, './', dir);
 }
 
 // cdn预加载使用
 const externals = {
-    'vue': 'Vue',
+    vue: 'Vue',
     'vue-router': 'VueRouter',
-    'vuex': 'Vuex',
-    'axios': 'axios',
+    vuex: 'Vuex',
+    axios: 'axios',
     'element-ui': 'ELEMENT',
     'js-cookie': 'Cookies',
-    'nprogress': 'NProgress'
-}
+    nprogress: 'NProgress',
+};
 
 const cdn = {
     // 开发环境
     dev: {
         css: [
-            'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css'
+            'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css',
         ],
-        js: []
+        js: [],
     },
     // 生产环境
     build: {
         css: [
-            'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css'
+            'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css',
         ],
         js: [
             'https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js',
@@ -36,86 +37,101 @@ const cdn = {
             'https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.min.js',
             'https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.1/index.js',
             'https://cdn.bootcdn.net/ajax/libs/js-cookie/2.2.1/js.cookie.min.js',
-            'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js'
-        ]
-    }
-}
+            'https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js',
+        ],
+    },
+};
 
 // 是否使用gzip
-const productionGzip = true
+const productionGzip = true;
 // 需要gzip压缩的文件后缀
-const productionGzipExtensions = ['js', 'css']
+const productionGzipExtensions = ['js', 'css'];
 
 module.exports = {
     chainWebpack: config => {
+        config.module.rule('eslint');
+        config.module.rule('eslint').use('eslint-loader');
+
         config.lintOnSave = process.env.NODE_ENV !== 'production';
 
-        config.plugin("define").tap(args=>{
+        config.plugin('define').tap(args => {
             const argv = process.argv;
             const mode = argv[argv.indexOf('--project-mode') + 1];
             args[0]['process.env'].MODE = `"${mode}"`;
             args[0]['process.env'].BASE_API = `"http://localhost:8000"`;
             return args;
-        })
+        });
 
         // 添加CDN参数到htmlWebpackPlugin配置中， 详见public/index.html 修改
         config.plugin('html').tap(args => {
             if (process.env.NODE_ENV === 'production') {
-                args[0].cdn = cdn.build
+                args[0].cdn = cdn.build;
             }
             if (process.env.NODE_ENV === 'development') {
-                args[0].cdn = cdn.dev
+                args[0].cdn = cdn.dev;
             }
-            return args
-        })
+            return args;
+        });
 
         // 找到svg loader
         const svgRule = config.module.rule('svg');
         // 清除已有 loader，否则会追加
         svgRule.uses.clear();
         svgRule.exclude.add(/node_modules/);
-        svgRule.test(/\.svg$/)
+        svgRule
+            .test(/\.svg$/)
             .use('svg-sprite-loader')
             .loader('svg-sprite-loader')
             .options({
-                symbolId: 'icon-[name]'
-            })
+                symbolId: 'icon-[name]',
+            });
 
         // 修改 images loader 添加 svg 处理
-        const imagesRule = config.module.rule("images");
+        const imagesRule = config.module.rule('images');
         imagesRule.exclude.add(resolve('src/icons'));
-        config.module.rule("images")
-            .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+        config.module.rule('images').test(/\.(png|jpe?g|gif|svg)(\?.*)?$/);
     },
 
     // 修改webpack config, 使其不打包externals下的资源
     configureWebpack: () => {
         const myConfig = {
-
+            lintOnSave: true,
         };
 
         if (process.env.NODE_ENV === 'production') {
             // 1. 生产环境npm包转CDN
-            myConfig.externals = externals
+            myConfig.externals = externals;
 
-            myConfig.plugins = []
+            myConfig.plugins = [];
             // 2. 构建时开启gzip，降低服务器压缩对CPU资源的占用，服务器也要相应开启gzip
-            productionGzip && myConfig.plugins.push(
+            productionGzip &&
+            myConfig.plugins.push(
                 new CompressionWebpackPlugin({
-                    test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+                    test: new RegExp(
+                        '\\.(' + productionGzipExtensions.join('|') + ')$',
+                    ),
                     threshold: 10240, //对超过10k的数据进行压缩
-                    minRatio: 0.6 // 压缩比例，值为0 ~ 1
-                })
-            )
+                    minRatio: 0.6, // 压缩比例，值为0 ~ 1
+                }),
+            );
         }
 
         if (process.env.NODE_ENV === 'development') {
+            myConfig.plugins.push(new StyleLintPlugin({
+                // 正则匹配想要lint监测的文件
+                files: ['src/**/*.vue', 'src/**/*.scss', 'src/assets/css/*.l?(e|c)ss']
+            }))
             // 关闭host check，方便使用ngrok之类的内网转发工具
             myConfig.devServer = {
-                disableHostCheck: true
-            }
+                disableHostCheck: true,
+                overlay: {
+                    warnings: false,
+                    errors: false,
+                },
+                lintOnSave: true,
+            };
         }
 
-        return myConfig
-    }
-}
+        return myConfig;
+    },
+};
