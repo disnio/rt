@@ -18,12 +18,14 @@ export const withPromise = (promiseFn) => {
                     "requestParams",
                     this.request.bind(this)
                 );
+                this.request();
             },
             methods: {
                 request() {
                     this.loading = true;
                     // 1、从子组件实例中拿数据，拿到子组件上定义的参数，作为初始化发送请求的参数。
                     const { requestParams } = this.$refs.wrapped;
+                    console.log(requestParams)
                     promiseFn(requestParams)
                         .then((result) => {
                             this.result = result;
@@ -35,6 +37,7 @@ export const withPromise = (promiseFn) => {
             },
             // 这里可以用模板
             render(h) {
+
                 // 这里传个 ref，就能拿到子组件实例了
                 // 3、向下透传 attrs listeners scopedSlots
                 const args = {
@@ -42,13 +45,16 @@ export const withPromise = (promiseFn) => {
                         result: this.result,
                         loading: this.loading,
                     },
+                    // 为被包裹的组件加引用
                     ref: "wrapped",
                 };
                 const wrapper = h("div", [
                     h(wrapped, { ...args, ...normalizeProps(this) }),
-                    this.loading ? h("span", ["加载中……"]) : null,
+                    this.loading ? h("span", ["加载中……"]) : "完成",
                     this.error ? h("span", ["加载错误"]) : null,
                 ]);
+
+
                 return wrapper;
             },
         };

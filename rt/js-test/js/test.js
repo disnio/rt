@@ -1,10 +1,61 @@
-$(function () {
-   // 德国以 . 分割金钱, 转到德国当地格式化方案即可 10.000.000.000
-   let s1 = 10000000000..toLocaleString('de-DE')
-   // 寻找字符空隙加 .
-   let s2 = '10000000000'.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-   // 寻找数字并在其后面加 . 
-   '10000000000'.replace(/(\d)(?=(\d{3})+\b)/g, '$1.')
-   
-   console.log(s2)
-});
+Promise.resolve()
+  .then(() => {
+    console.log('promise1');
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log('timer2')
+        resolve()
+      }, 0)
+    })
+      .then(async () => {
+        await foo();
+        return new Error('error1')
+      })
+      .then((ret) => {
+        setTimeout(() => {
+          console.log(ret);
+          Promise.resolve()
+            .then(() => {
+              return new Error('error!!!')
+            })
+            .then(res => {
+              console.log("then: ", res)
+            })
+            .catch(err => {
+              console.log("catch: ", err)
+            })
+        }, 1 * 3000)
+      }, err => {
+        console.log(err);
+      })
+      .finally((res) => {
+        console.log(res);
+        throw new Error('error2')
+      })
+      .then((res) => {
+        console.log(res);
+      }, err => {
+        console.log(err);
+      })
+  })
+  .then(() => {
+    console.log('promise2');
+  })
+
+function foo() {
+  setTimeout(() => {
+    console.log('async1');
+  }, 2 * 1000);
+}
+
+setTimeout(() => {
+  console.log('timer1')
+  Promise.resolve()
+    .then(() => {
+      console.log('promise3')
+    })
+}, 0)
+
+console.log('start');
+
+

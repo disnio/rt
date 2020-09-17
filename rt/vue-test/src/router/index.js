@@ -18,6 +18,18 @@ const routes = [
             import(/* webpackChunkName: "test" */ "../views/Test/Test.vue"),
     },
     {
+        path: "/jx",
+        name: "jx",
+
+        component: () =>
+            import(/* webpackChunkName: "jx" */ "../views/Jx/Jx.vue"),
+    }, {
+        path: "/pack",
+        name: "pack",
+        component: () =>
+            import(/* webpackChunkName: "pack" */ "../views/d3/Pack.vue"),
+    },
+    {
         path: "/hoc",
         name: "hoc",
 
@@ -25,18 +37,26 @@ const routes = [
             import(/* webpackChunkName: "hoc" */ "../views/Hoc.vue"),
     },
     {
-        path: "/page/:id",
+        path: "/page",
         name: "page",
-        meta: {
-            requireAuth: true,
-        },
-        beforeEnter: (to, from, next) => {
-            console.log("表现和 beforeEach 一致，只是作用在单独路由")
-            next()
-        },
         props: true,
         component: () =>
             import(/* webpackChunkName "page" */ "../views/Page.vue"),
+        children: [
+            {
+                path: "/page/:id",
+                props: true,
+                meta: {
+                    requireAuth: true,
+                },
+                beforeEnter: (to, from, next) => {
+                    console.log("表现和 beforeEach 一致，只是作用在单独路由")
+                    next()
+                },
+                component: () =>
+                    import(/* webpackChunkName "page" */ "../views/Page.vue"),
+            }
+        ]
     },
 ];
 
@@ -45,7 +65,6 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 });
-
 
 
 export default router;

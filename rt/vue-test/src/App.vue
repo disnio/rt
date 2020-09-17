@@ -23,17 +23,24 @@
                         <span>Test</span>
                     </a-menu-item>
 
+                    <a-menu-item key="jx">
+                        <a-icon type="upload" />
+                        <span>Jsx</span>
+                    </a-menu-item>
+
                     <a-menu-item key="hoc">
                         <a-icon type="user" />
                         <span>Hoc</span>
                     </a-menu-item>
-
+                    <a-menu-item key="pack">
+                        <a-icon type="user" />
+                        <span>Pack</span>
+                    </a-menu-item>
                 </a-menu>
             </a-layout-sider>
             <a-layout>
                 <a-layout-header> </a-layout-header>
                 <a-layout-content> <router-view /></a-layout-content>
-                <a-layout-footer>Footer</a-layout-footer>
             </a-layout>
         </a-layout>
     </div>
@@ -48,8 +55,8 @@ export default {
     },
     methods: {
         menuClick(e) {
-            console.log(e)
-            this.$router.push(e.key)
+            console.log(e);
+            this.$router.push('/' + e.key);
             // .then(function push(params) {
             //     console.log("success: ", params)
             // });
@@ -60,7 +67,7 @@ export default {
 
 <style lang="scss">
 #app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;

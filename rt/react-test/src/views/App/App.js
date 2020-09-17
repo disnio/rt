@@ -1,6 +1,7 @@
 import React from 'react';
+
 import './App.css';
-import Test from './Test/Test';
+import Test from 'views/Test/Test';
 
 function App() {
   return (

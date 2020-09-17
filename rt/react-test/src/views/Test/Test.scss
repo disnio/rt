@@ -1,0 +1,120 @@
+$designWidth: 750;
+@function px($px) {
+    @return $px/$designWidth * 100 + rem;
+    //@return $px + px
+}
+
+@function px2vw($px) {
+    @return $px / $designWidth * 100vw;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    font-size: 14px;
+}
+
+.main {
+    position: relative;
+}
+
+@mixin border-1px($color: #000, $radius: 2px, $style: solid) {
+    &:before {
+        content: '';
+        pointer-events: none;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: 0 0;
+        border: 1px $style $color;
+        border-radius: $radius;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        @media screen and (min-device-pixel-ratio: 2),
+            (-webkit-min-device-pixel-ratio: 2) {
+            width: 200%;
+            height: 200%;
+            border-radius: $radius * 2;
+            transform: scale(0.5);
+        }
+        @media screen and (min-device-pixel-ratio: 3),
+            (-webkit-min-device-pixel-ratio: 3) {
+            width: 300%;
+            height: 300%;
+            border-radius: $radius * 3;
+            transform: scale(0.33);
+        }
+    }
+}
+
+.w42 {
+    position: relative;
+    display: block;
+    width: 200px;
+    height: 30px;
+    margin-top: 10px;
+    background-color: lime;
+    @include border-1px(#000);
+}
+
+.view-point {
+    width: 100%;
+    aspect-ratio: '20:1';
+    background: #000;
+    color: #222;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.polling-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+@keyframes move-eye {
+    0% {
+        margin-left: 0%;
+    }
+    100% {
+        margin-left: 100%;
+    }
+}
+
+.cylon-eye {
+    background-color: red;
+    background-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.9) 25%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.9) 100%
+    );
+    color: white;
+    height: 100%;
+    width: 20%;
+
+    //animation: 4s steps(5) 0s infinite alternate move-eye;
+    //animation: 4s linear 2s infinite alternate move-eye;
+}
+
+.anit {
+    color: black;
+    text-align: center;
+}
+
+.box {
+    width: 100px;
+    height: 200px;
+    border: 1px solid black;
+}

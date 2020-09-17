@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span>{{ result }}</span>
+        <span>{{ result.name }}</span>
         <slot></slot>
         <slot name="named"></slot>
         <button @click="reload">重新加载数据</button>
@@ -10,19 +10,19 @@
 <script>
 // 木偶组件
 export default {
-    name: "wrapped",
-    props: ["result", "loading"],
+    name: 'wrappeds',
+    props: ['result', 'loading'],
     data() {
         return {
             requestParams: {
-                name: "ssh",
+                name: 'ssh',
             },
         };
     },
     methods: {
         reload() {
             this.requestParams = {
-                name: "changed!!",
+                name: 'changed!!',
             };
         },
     },

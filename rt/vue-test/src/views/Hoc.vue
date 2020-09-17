@@ -11,15 +11,15 @@
     </div>
 </template>
 <script>
-import { withPromise, withLog, compose } from "../utils/hoc-promise";
-import wrapped from "../components/hoc/wrapped.vue";
+import { withPromise, withLog, compose } from '../utils/hoc-promise';
+import wrapped from '../components/hoc/wrapped.vue';
 
 // 假装这是一个 axios 请求函数
 const request = (params) => {
     return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(params);
-        }, 1000);
+        // setTimeout(() => {
+        //     }, 1000);
+        resolve(params);
     });
 };
 
@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         onChange() {
-            console.log("wrapped params change");
+            console.log('wrapped params change');
         },
     },
 };

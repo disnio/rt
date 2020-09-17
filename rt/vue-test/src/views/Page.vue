@@ -1,33 +1,36 @@
 <template>
     <div class="wrap">
-        <div class="item" v-if="state==='loading'">Loading...</div>
-        <div class="item">list: {{list}}</div>
-        <div>$route.params.id: {{id}}</div>
-
+        <div class="item" v-if="state === 'loading'">Loading...</div>
+        <div class="item">list: {{ list }}</div>
+        <div>$route.params.id: {{ id }}</div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "page2",
+    name: 'page2',
     data: function() {
         return {
-            state: "loading",
-            list: [0, 3, [4, 17], [2, [8, 6], 10]]
+            state: 'loading',
+            list: [0, 3, [4, 17], [2, [8, 6], 10]],
         };
     },
-    props:["id"],
-    components: {},
-    beforeRouteUpdate(to, form , next){
-        this.state = "loading";
-        this.init();
-        next();
+    props: {
+        id: {
+            type: String,
+            default: '1',
+        },
     },
-    mounted() {},
+    components: {},
+    mounted() {
+        this.init();
+        console.log(this.id);
+    },
     methods: {
-        init(){
+        init() {
             setTimeout(() => {
-                this.state = "over"
+                console.log('change state');
+                this.state = 'over';
             }, 2000);
         },
         debounce2: function(func, wait = 50, immediate) {
@@ -123,14 +126,14 @@ export default {
 
             var ret = func.apply(res, Array.prototype.slice.call(arguments, 1));
             if (
-                (typeof ret === "object" || typeof ret === "function") &&
+                (typeof ret === 'object' || typeof ret === 'function') &&
                 ret !== null
             ) {
-                console.log("object");
+                console.log('object');
                 return ret;
             }
 
-            console.log("no obj");
+            console.log('no obj');
 
             return res;
         },
@@ -140,7 +143,7 @@ export default {
             }
 
             Parent.prototype.sayName = function() {
-                console.log("parent name:", this.name);
+                console.log('parent name:', this.name);
             };
 
             function Child(name, parentName) {
@@ -156,14 +159,14 @@ export default {
 
             Child.prototype = create(Parent.prototype);
             Child.prototype.sayName = function() {
-                console.log("child name:", this.name);
+                console.log('child name:', this.name);
             };
             Child.prototype.constructor = Child;
 
-            var parent = new Parent("father");
+            var parent = new Parent('father');
             parent.sayName();
 
-            var child = new Child("son", "father");
+            var child = new Child('son', 'father');
             child.sayName();
         },
         mySetTimeout: function() {
@@ -177,15 +180,15 @@ export default {
                 var nowExecuteTimes = executeTimes;
                 var timeDiff = +new Date() - oriTime;
                 console.log(
-                    "timeoutFn ",
+                    'timeoutFn ',
                     nowExecuteTimes,
-                    "after ",
+                    'after ',
                     timeDiff,
-                    "ms"
+                    'ms'
                 );
                 var delayParam = 0;
                 sleep(1000);
-                console.log("timeoutFn ", nowExecuteTimes, "finish");
+                console.log('timeoutFn ', nowExecuteTimes, 'finish');
 
                 if (executeTimes < 5) {
                     setTimeout(ti, intervalTime);
@@ -234,7 +237,7 @@ export default {
                     return;
                 }
                 const fns = this.events[name];
-                fns.forEach(fn => fn.call(this, ...args));
+                fns.forEach((fn) => fn.call(this, ...args));
                 return this;
             }
 
@@ -262,14 +265,14 @@ export default {
         },
         myPrototypeInherit: function() {
             function Parent() {
-                this.name = "tom";
+                this.name = 'tom';
             }
             Parent.prototype.getName = function() {
                 return this.name;
             };
 
             function Child() {
-                this.cname = "jerry";
+                this.cname = 'jerry';
             }
 
             Child.prototype = new Parent();
@@ -282,7 +285,7 @@ export default {
         },
         myConstructorInherit: function() {
             function Parent() {
-                this.colors = ["red", "yellow"];
+                this.colors = ['red', 'yellow'];
             }
 
             function Child() {
@@ -290,10 +293,10 @@ export default {
             }
 
             var sub = new Child();
-            sub.colors.push("black");
+            sub.colors.push('black');
 
             var sub2 = new Child();
-            sub2.colors.push("white");
+            sub2.colors.push('white');
 
             console.log(sub.colors);
             console.log(sub2.colors);
@@ -301,7 +304,7 @@ export default {
         myComposeInherite: function() {
             function Parent(name) {
                 this.name = name;
-                this.colors = ["red", "black"];
+                this.colors = ['red', 'black'];
             }
 
             Parent.prototype.sayName = function() {
@@ -318,16 +321,13 @@ export default {
                 console.log(this.age, this.name);
             };
 
-            var parent = new Parent("father");
+            var parent = new Parent('father');
             parent.sayName();
 
-            var child = new Child("son", 13);
+            var child = new Child('son', 13);
             child.sayAge();
-        }
-    }
+        },
+    },
 };
 </script>
-<style>
-
-
-</style>
+<style></style>
