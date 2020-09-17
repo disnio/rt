@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>自适应布局方案</title>
+        <style>
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="自适应布局方案">自适应布局方案</h1>
+<p>一套代码对应一份设计稿，实现向上/向下兼容自适应布局方案对比</p>
+<blockquote>
+<p>这里只做最表面的使用方法不对，不进行多种环境（复杂布局等）的测试，内容仅供参考。</p>
+<p>后续会对每一个方案做进一步的研究。你问我什么时候？下次一定！👾</p>
+</blockquote>
+<h2 id="起步">起步</h2>
+<h3 id="rem-是什么">rem 是什么</h3>
+<p><code>rem</code>（font size of the root element）是指相对于根元素<code>&lt;html&gt;</code>来做计算的字体大小单位。</p>
+<p>e.g. 设置<code>html { font-size: 75px }</code>时，其他元素<code>1rem = 75px</code>，<code>4rem = 300px</code></p>
+<h3 id="vw-是什么">vw 是什么</h3>
+<p><code>vw</code>是基于<code>viewport</code>视窗的长度单位。<code>1vw</code>等于<code>window.innerWidth</code>的<code>1%</code></p>
+<p>e.g. 设备物理宽度为<code>375px</code>时，<code>1vw = 3.75px</code></p>
+<h3 id="dpr-是什么">dpr 是什么</h3>
+<p>设备像素比<code>device pixel ratio</code>简称<code>dpr</code>，即物理像素和设备独立像素的比值。</p>
+<p>在<code>web</code>中，浏览器为我们提供了<code>window.devicePixelRatio</code>来帮助我们获取<code>dpr</code>。</p>
+<p><code>iPhone 6、7、8</code>的实际物理像素是<code>750 x 1334</code>，在开发者工具中我们可以看到：它的设备独立像素是<code>375 x 667</code>，设备像素比<code>dpr</code>为<code>2</code></p>
+<p>e.g. 如果给定一个元素的高度为<code>200px</code>(这里的<code>px</code>指物理像素，非<code>CSS</code>像素)，<code>iphone6</code>的设备像素比<code>dpr = 2</code>，我们给定的<code>height</code>应为<code>200px/2=100dp</code>。</p>
+<h2 id="flexible前手淘做法">Flexible（前手淘做法）</h2>
+<p>js 获取<code>clientWidth</code>，分成十份。再设置<code>rem</code>。字体大小则是<code>12 * dpr</code></p>
+<h2 id="postcss-px-to-viewport有赞做法">postcss-px-to-viewport（有赞做法）</h2>
+<p><code>postcss-px-to-viewport</code>的做法其实没多大不同，它直接计算每个像素在设计稿中占据的<code>%</code>来输出<code>vw</code>，<code>rem</code></p>
+<blockquote>
+<p>设计稿 = 375px 时</p>
+</blockquote>
+<h4 id="1-转换-vw-方案">1. 转换 VW 方案</h4>
+<pre><code class="language-js"><div><span class="hljs-string">'postcss-px-to-viewport'</span>: {
+    <span class="hljs-attr">unitToConvert</span>: <span class="hljs-string">'px'</span>, <span class="hljs-comment">// 需要转换的单位，默认为"px"</span>
+    viewportWidth: <span class="hljs-number">375</span>, <span class="hljs-comment">// 视窗的宽度，对应设计稿的宽度</span>
+    viewportUnit: <span class="hljs-string">'vw'</span>, <span class="hljs-comment">// 指定需要转</span>
+    fontViewportUnit: <span class="hljs-string">'vw'</span>, <span class="hljs-comment">// 字体使用的视口单位</span>
+    unitPrecision: <span class="hljs-number">13</span> <span class="hljs-comment">// 指定`px`转换为视窗单位值的小数后 x位数</span>
+   	...
+}
+</div></code></pre>
+<p><code>1px = 100 / 375 = 0.2666666666666%</code> 即 <code>100px = 26.6666666666666% = 26.6666666666666vw</code></p>
+<p>实际渲染时（375px 的屏幕），<code>26.6666666666666vw = 26.6666666666% * 375 = 100px</code></p>
+<p><img src="https://s1.ax1x.com/2020/08/03/aUYRmV.png" alt=""></p>
+<p>在 转换成<code>vw</code>的方案设置媒体查询超出宽度范围后固定<code>body</code>宽度，内容居中时，会出现样式过大影响查看的问题。</p>
+<pre><code class="language-scss"><div>@<span class="hljs-keyword">media</span> screen and (min-width: 1024px) {
+  <span class="hljs-selector-tag">html</span> {
+    <span class="hljs-attribute">max-width</span>: <span class="hljs-number">1024px</span>;
+  }
+}
+</div></code></pre>
+<p><img src="https://s1.ax1x.com/2020/08/03/aUdwGD.gif" alt=""></p>
+<h4 id="2转换-rem-方案">2.转换 REM 方案</h4>
+<p>避免不同浏览器的默认字体大小不一样导致大小不一致的问题，我们需要固定好<code>root元素 html</code>的<code>font-size</code></p>
+<p>恰好我们可以利用<code>postcss-px-viewport</code>不支持内联样式的转换。来设置<code>root元素 html</code>的内联<code>font-size: 16px;</code>来固定<code>root</code>的字体大小以适配转换成<code>rem</code>的方案。</p>
+<p><code>1px = 100 / 375 = 0.2666666666666%</code> 即 <code>100px = 26.6666666666666% = 26.6666666666666rem</code></p>
+<p>由于我们设置了<code>root元素 html</code>的内联<code>font-size: 16px;</code>来固定<code>root</code>的字体大小。因此，实际渲染时（375px 的屏幕），容器<code>26.6666666666666rem = 26.6666666666666 * 16 = 426.6666666666656px</code></p>
+<p>也就是说，我们需要更改<code>viewportWidth</code>的大小来和设计图适配。直接推导一下设计图与<code>viewportWidth</code>的倍数关系 = <code>426.6666666666656 / 100 = 4.26656</code>倍。设置<code>viewportWidth: 1599.96</code> <code>（375 * 4.26656 = 1599.96）</code></p>
+<p><img src="https://s1.ax1x.com/2020/08/03/aUDBkt.png" alt=""></p>
+<p>同样设置媒体查询超出宽度范围后固定<code>body</code>宽度，内容居中</p>
+<pre><code class="language-scss"><div>@<span class="hljs-keyword">media</span> screen and (min-width: 1024px) {
+  <span class="hljs-selector-tag">html</span> {
+    <span class="hljs-attribute">max-width</span>: <span class="hljs-number">1024px</span>;
+  }
+}
+</div></code></pre>
+<p><img src="https://s1.ax1x.com/2020/08/03/aU0BDA.gif" alt=" "></p>
+<h2 id="rem--vw网易移动端做法">rem + vw（网易移动端做法）</h2>
+<p>原则上也需要一个参考的设计图，这边假设为<code>375px</code>宽设计图。计算方法与<code>postcss-px-to-viewport rem</code>方案一至。</p>
+<blockquote>
+<p>计算公式 ：<code>1vw = 7.5px</code> <code>1px = 0.1333333333333333vw</code> <code>100px = 13.3333333333333333vw </code></p>
+<p><code>1rem = 13.3333333333333333vw = 100px</code></p>
+</blockquote>
+<p>但需要注意的是，设置时需要把<code>1rem</code>设置成<code>100px 对应的 vw值</code>的值（防止小于浏览器最小字体），编写时根据设计图<code>px / 100</code>来编写。</p>
+<p>当需要<code>向上兼容</code>自适应的时候，设置好<code>@media</code>对应不同的<code>font-size</code>即可。</p>
+<p>同样设置媒体查询超出宽度范围后固定<code>body</code>宽度，内容居中。</p>
+<pre><code class="language-scss"><div><span class="hljs-selector-tag">html</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">26.6666666666666667vw</span>;
+  <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span> auto;
+  <span class="hljs-selector-tag">body</span> {
+    <span class="hljs-comment">// 重置字体大小</span>
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">0.14rem</span>;
+  }
+}
+
+@<span class="hljs-keyword">media</span> screen and (min-width: 768px) {
+  <span class="hljs-selector-tag">html</span> {
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">9vw</span>;
+    <span class="hljs-attribute">max-width</span>: <span class="hljs-number">768px</span>;
+  }
+}
+</div></code></pre>
+<p><img src="https://s1.ax1x.com/2020/08/28/d5DkrQ.gif" alt="ren+vw方案"></p>
+<h2 id="总结">总结</h2>
+<blockquote>
+<p><code>Flexible</code>在当今已经可以放弃掉，转用 CSS的方法解放因使用<code>JS</code>动态修改<code>fontsize</code>所消耗的性能</p>
+</blockquote>
+<h3 id="只做移动端">只做移动端</h3>
+<h4 id="postcss-px-to-viewport----vw方法"><code>postcss-px-to-viewport -- vw</code>方法</h4>
+<p>一把梭，什么都不用考虑。且是最真实的按照屏幕大小的比例来放大缩小。</p>
+<h3 id="小屏设计图向上兼容自适应大屏幕">小屏设计图向上兼容自适应大屏幕</h3>
+<blockquote>
+<p>当需要从移动端设计图适配到<code>平板</code>、<code>PC屏幕</code></p>
+</blockquote>
+<h4 id="最方便postcss-px-to-viewport----rem">（最方便）<code>postcss-px-to-viewport -- rem</code></h4>
+<h5 id="优点">优点</h5>
+<ol>
+<li>自动转换 UI框架中的单位。</li>
+<li>配合<code>media媒体查询</code>设置<code>root fontSize</code>适配不同分辨率的大小以及<code>限制最大宽度</code>。</li>
+</ol>
+<h5 id="缺点">缺点</h5>
+<ol>
+<li>所有设置转换的单位都会被转换掉，无法设置某些样式的单位不被转换。</li>
+</ol>
+<h4 id="最灵活rem--vw">（最灵活）<code>rem + vw</code></h4>
+<h5 id="优点-1">优点</h5>
+<ol>
+<li>配合<code>media媒体查询</code>设置<code>root fontSize</code>适配不同分辨率的大小以及<code>限制最大宽度。</code></li>
+<li>高度自定义，谁需要转换谁转换成<code>rem</code>。</li>
+</ol>
+<h5 id="缺点-1">缺点</h5>
+<ol>
+<li>当需要把 UI框架中的单位也转换时，会非常的头大。需要一个一个覆盖。</li>
+</ol>
+<h4 id="不适合postcss-px-to-viewport----vw">（不适合）<code>postcss-px-to-viewport -- vw</code></h4>
+<p>该方案在限制最大宽度的时候，由于大小都是更具 <code>viewport</code>来决定的。所以限制了最大宽度时里面的内容依旧会随<code>viewport</code>变大而变大。故不合适</p>
+<h3 id="大屏设计图向下兼容自适应小屏幕">大屏设计图向下兼容自适应小屏幕</h3>
+<h4 id="建议postcss-px-to-viewport----rem">（建议）<code>postcss-px-to-viewport -- rem</code></h4>
+<h5 id="优点-2">优点</h5>
+<ol>
+<li>自动转换 UI框架中的单位，省事。</li>
+<li>设置最小宽度居中，超出部分滚动条。</li>
+<li>适配比设计稿更大的屏幕时把<code>root fontSize</code>设置为更大即可。</li>
+</ol>
+<h5 id="缺点-2">缺点</h5>
+<ol>
+<li>所有设置转换的单位都会被转换掉，无法设置某些样式的单位不被转换。</li>
+</ol>
+<h4 id="一般-rem--vw">（一般） rem + vw</h4>
+<blockquote>
+<p>假设屏幕 1024px</p>
+<p>计算公式 ：<code>1vw = 10.24px</code> <code>1px = 0.09765625vw</code> <code>100px = 9.765625vw </code></p>
+<p><code>1rem = 9.765625vw = 100px</code></p>
+</blockquote>
+<h5 id="优点-3">优点</h5>
+<ol>
+<li>设置时需要把<code>1rem</code>设置成<code>100px 对应的 vw值</code>的值（防止小于浏览器最小字体），编写时根据设计图<code>px / 100</code>来编写。</li>
+</ol>
+<h5 id="缺点-3">缺点</h5>
+<ol>
+<li>需要写多个媒体查询更改<code>root fontSize</code>（因为存在字体太大导致一屏内容显示太少问题）。</li>
+<li>当需要把 UI框架中的单位也转换时，会非常的头大。需要一个一个覆盖。</li>
+<li>无法设置最小宽度居中内容。</li>
+</ol>
+<h4 id="不适合postcss-px-to-viewport----vw-1">（不适合）<code>postcss-px-to-viewport -- vw</code></h4>
+<p>由于国产浏览器中的<code>root fontSize</code>小于默认最小字体（一般是 12px）时，会强制保持<code>root fontSize = 12px</code> ，因此该方法并不适合。</p>
+
+    </body>
+    </html>
