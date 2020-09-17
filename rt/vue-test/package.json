@@ -68,6 +68,7 @@
     "lint-staged": {
         "src/**/*.{js,jsx,json,vue,css,scss}": [
             "prettier.cmd --write",
+            "eslint --fix ./src",
             "git add"
         ]
     }
