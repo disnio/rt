@@ -5,8 +5,7 @@
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
-        "lint": "vue-cli-service lint  src/**/*.{css,scss} --fix",
-        "lint:style": "stylelint src/**/*.{css,scss} --syntax scss --fix",
+        "lint": "vue-cli-service lint  src/**/*.{js,css,scss} --fix",
         "fix": "prettier --write  ./src",
         "pre-commit": "pretty-quick --staged",
         "pre-push": "lint"
@@ -68,7 +67,7 @@
     "lint-staged": {
         "src/**/*.{js,jsx,json,vue,css,scss}": [
             "prettier.cmd --write",
-            "eslint --fix ./src",
+            "vue-cli-service lint  src/**/*.{js,css,scss} --fix",
             "git add"
         ]
     }
