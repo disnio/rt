@@ -5,11 +5,11 @@ export default {
     render() {
         return (
             // 这里应该是基础布局， name data 具体的细节应该从slot 父组件传进来
-            <div class="red">
+            <div className="red">
                 {this.$scopedSlots.title({
                     title: this.item.title,
                 })}
-                <div>
+                <div id="item">
                     {
                         // v-for name data
                         this.item.data.map(v => {
@@ -19,10 +19,10 @@ export default {
                         })
                     }
                 </div>
-                <div class="tip">
-                    <tags onClick={() => this.clickChild(this.item.title)}>
+                <div className="tip">
+                    <div onClick={() => this.clickChild(this.item.title)}>
                         字号：{this.item.tpid}
-                    </tags>
+                    </div>
                 </div>
             </div>
         );

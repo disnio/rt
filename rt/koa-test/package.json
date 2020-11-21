@@ -1,0 +1,11 @@
+{
+  "name": "wsc",
+  "version": "1.0.0",
+  "description": "koa test",
+  "main": "index.js",
+  "author": "wsc",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.13.0"
+  }
+}

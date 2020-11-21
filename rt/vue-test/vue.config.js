@@ -1,6 +1,6 @@
 const path = require('path');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
+
 
 function resolve(dir) {
     return path.join(__dirname, './', dir);
@@ -8,13 +8,13 @@ function resolve(dir) {
 
 // cdn预加载使用
 const externals = {
-    vue: 'Vue',
+    'vue': 'Vue',
     'vue-router': 'VueRouter',
-    vuex: 'Vuex',
-    axios: 'axios',
+    'vuex': 'Vuex',
+    'axios': 'axios',
     'element-ui': 'ELEMENT',
     'js-cookie': 'Cookies',
-    nprogress: 'NProgress',
+    'nprogress': 'NProgress',
 };
 
 const cdn = {
@@ -49,10 +49,10 @@ const productionGzipExtensions = ['js', 'css'];
 
 module.exports = {
     chainWebpack: config => {
-        config.module.rule('eslint');
-        config.module.rule('eslint').use('eslint-loader');
-
-        config.lintOnSave = process.env.NODE_ENV !== 'production';
+        // config.module.rule('eslint');
+        // config.module.rule('eslint').use('eslint-loader');
+        // 有问题
+        // config.lintOnSave = process.env.NODE_ENV !== 'production';
 
         config.plugin('define').tap(args => {
             const argv = process.argv;
@@ -95,40 +95,36 @@ module.exports = {
     // 修改webpack config, 使其不打包externals下的资源
     configureWebpack: () => {
         const myConfig = {
-            lintOnSave: true,
+            devtool: "cheap-module-source-map",
         };
-
+        myConfig.plugins = [];
         if (process.env.NODE_ENV === 'production') {
             // 1. 生产环境npm包转CDN
             myConfig.externals = externals;
 
-            myConfig.plugins = [];
+
             // 2. 构建时开启gzip，降低服务器压缩对CPU资源的占用，服务器也要相应开启gzip
             productionGzip &&
-            myConfig.plugins.push(
-                new CompressionWebpackPlugin({
-                    test: new RegExp(
-                        '\\.(' + productionGzipExtensions.join('|') + ')$',
-                    ),
-                    threshold: 10240, //对超过10k的数据进行压缩
-                    minRatio: 0.6, // 压缩比例，值为0 ~ 1
-                }),
-            );
+                myConfig.plugins.push(
+                    new CompressionWebpackPlugin({
+                        test: new RegExp(
+                            '\\.(' + productionGzipExtensions.join('|') + ')$',
+                        ),
+                        threshold: 10240, //对超过10k的数据进行压缩
+                        minRatio: 0.6, // 压缩比例，值为0 ~ 1
+                    }),
+                );
         }
 
         if (process.env.NODE_ENV === 'development') {
-            myConfig.plugins.push(new StyleLintPlugin({
-                // 正则匹配想要lint监测的文件
-                files: ['src/**/*.vue', 'src/**/*.scss', 'src/assets/css/*.l?(e|c)ss']
-            }))
+
             // 关闭host check，方便使用ngrok之类的内网转发工具
             myConfig.devServer = {
                 disableHostCheck: true,
                 overlay: {
                     warnings: false,
-                    errors: false,
+                    errors: true,
                 },
-                lintOnSave: true,
             };
         }
 

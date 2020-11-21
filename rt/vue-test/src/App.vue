@@ -23,6 +23,11 @@
                         <span>Test</span>
                     </a-menu-item>
 
+                    <a-menu-item key="sort-table">
+                        <a-icon type="upload" />
+                        <span>SortTable</span>
+                    </a-menu-item>
+
                     <a-menu-item key="jx">
                         <a-icon type="upload" />
                         <span>Jsx</span>
@@ -39,8 +44,10 @@
                 </a-menu>
             </a-layout-sider>
             <a-layout>
-                <a-layout-header> </a-layout-header>
-                <a-layout-content> <router-view /></a-layout-content>
+                <a-layout-header></a-layout-header>
+                <a-layout-content>
+                    <router-view />
+                </a-layout-content>
             </a-layout>
         </a-layout>
     </div>
@@ -53,6 +60,7 @@ export default {
             collapsed: false,
         };
     },
+    mounted() {},
     methods: {
         menuClick(e) {
             console.log(e);
@@ -81,9 +89,11 @@ export default {
     .ant-layout {
         margin-bottom: 48px;
     }
+
     .ant-layout:last-child {
         margin: 0;
     }
+
     .trigger {
         font-size: 18px;
         line-height: 64px;

@@ -65,6 +65,7 @@ export default {
                         title: props => {
                             return <h2>{props.title}</h2>;
                         },
+
                         content: props => {
                             let cont = props.content;
                             // 模板定制

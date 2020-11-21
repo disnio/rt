@@ -18,9 +18,9 @@ export function changeKeys(v) {
 
     return v;
 }
-import Vue from 'vue'
-export default Vue.component('sort-tr', {
-    name: "sortTr",
+
+export const SortTr = {
+    name: "SortTr",
     props: {
         table: Object,
         data: Array,
@@ -34,7 +34,11 @@ export default Vue.component('sort-tr', {
             const cellProps = {
                 props: {
                     ...item
-                }
+                },
+                on: {
+                    ...this.$listeners,
+                    ...this.event,
+                },
             };
             return (
                 <el-table-column
@@ -59,7 +63,11 @@ export default Vue.component('sort-tr', {
             const cellProps = {
                 props: {
                     ...item
-                }
+                },
+                on: {
+                    ...this.$listeners,
+                    ...this.event,
+                },
             };
             return (
                 <el-table-column
@@ -94,7 +102,7 @@ export default Vue.component('sort-tr', {
                             switch (item.prop) {
                                 case "selection":
                                 case "index":
-                                    return this.renderSelect(h, item)
+                                    return this.renderSelect(h, item);
 
                                 default:
                                     return this.renderCell(h, item)
@@ -106,4 +114,5 @@ export default Vue.component('sort-tr', {
         )
     }
 
-})
+};
+

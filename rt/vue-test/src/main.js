@@ -11,6 +11,7 @@ Vue.use(Icon);
 Vue.use(Menu);
 Vue.use(Button);
 
+
 Vue.prototype.$message = message;
 
 new Vue({
